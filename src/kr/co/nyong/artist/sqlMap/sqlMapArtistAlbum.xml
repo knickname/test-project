@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQLMap 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ArtistAlbum">
+	<typeAlias alias="artistAlbumBean" type="kr.co.nyong.album.to.ArtistAlbumBean"/>
+	
+	<parameterMap class="artistAlbumBean" id="artistAlbumMap">
+		<parameter property="number" jdbcType="VARCHAR"/>
+		<parameter property="albumId" jdbcType="VARCHAR"/>
+		<parameter property="artistId" jdbcType="VARCHAR"/>
+	</parameterMap>
+	
+	<resultMap class="artistAlbumBean" id="resultArtistAlbumMap">
+		<result property="number" column="NO"/>
+		<result property="albumId" column="ALB_ID"/>
+		<result property="artistId" column="ARTIST_ID"/>
+	</resultMap>
+	
+	<select id="selectArtistAlbum" resultMap="resultArtistAlbumMap">
+		select NO, 
+					ab.ALB_ID as ALB_ID, 
+					at.ARTIST_ID as ARTIST_D
+		from ALBUM ab, ARTIST at
+		where ab.ARTIST_ID = at.ARTIST_ID
+		and ab.ALB_ID=#albumId#
+	</select>
+	
+	<insert id="insertArtistAlbum" parameterClass="artistAlbumBean">
+		insert into ALBUM_ARTIST (NO, ALB_ID, ARTIST_ID)
+			values (#number#,#albumId#,#artistId#)
+	</insert>
+	
+	<update id="updateArtistAlbum" parameterClass="artistAlbumBean">
+		update ALBUM_ARTIST set ALB_ID=#albumId#, ARTIST_ID=#artistId#
+			where NO=#number#
+	</update>
+	
+	<delete id="deleteArtistAlbum" parameterClass="artistAlbumBean">
+		delete from ALBUM_ARTIST where NO=#number#
+	</delete>
+</sqlMap>

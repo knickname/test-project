@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+ xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans   
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                        http://www.springframework.org/schema/context   
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd
+                        http://www.springframework.org/schema/aop
+                        http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+                        http://www.springframework.org/schema/tx
+                        http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+                        
+<context:property-placeholder location="/WEB-INF/config/jdbc.properties" />
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}"/>
+		<property name="url" value="${jdbc.url}"/>
+		<property name="username" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+		<property name="maxActive" value="${jdbc.maxActive}"/>
+		<property name="maxIdle" value="${jdbc.maxIdle}"/>
+		<property name="maxWait" value="${jdbc.maxWait}"/>
+	</bean>
+	
+	<tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="save*" propagation="REQUIRED"/>
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="delete*" propagation="REQUIRED" />
+			<tx:method name="select*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+	
+	<aop:config>
+		<aop:pointcut id="loggingDaoPointcut" expression="execution(* kr..controller.*.*(..)) or execution(* kr..service.*.*(..))
+							 or execution(* kr..dao.*.*(..)) " />
+		<aop:pointcut id="emailPointcut" expression="execution(* kr..service.*.*(..))" />
+		<aop:pointcut id="tranctionPointcut" expression="execution(* kr..service.*.*(..))" />
+		<aop:advisor advice-ref="loggingAdvice"
+			pointcut-ref="loggingDaoPointcut" />
+		<aop:advisor advice-ref="emailNotificationThrowsAdvice"
+			pointcut-ref="emailPointcut" />
+		<aop:advisor advice-ref="transactionAdvice"
+			pointcut-ref="tranctionPointcut" />	
+	</aop:config>
+	
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean"
+		p:configLocation="/WEB-INF/config/sqlMapConfig.xml" p:dataSource-ref="dataSource" />
+	
+	<bean id="iBatisDaoSupport" class="kr.co.seoulit.common.dao.IBatisSupportDAO"
+		abstract="true">
+		<property name="messageSource" ref="messageSource" />
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+</beans>

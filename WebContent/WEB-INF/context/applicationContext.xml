@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                        http://www.springframework.org/schema/context   
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd
+                        http://www.springframework.org/schema/aop
+                        http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+                        http://www.springframework.org/schema/tx
+                        http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+
+	<bean id="fileUpload" class="kr.co.nyong.common.db.FileUpload">
+		<property name="petImgFileLocation">
+			<props>
+				<prop key="workSrc">http://localhost:8282/album</prop>
+				<prop key="tomSrc"></prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="staffFileUpload" class="kr.co.seoulit.common.db.StaffFileUpload">
+		<property name="staffImgFileLocation">
+	 		<props>
+	 			<prop key="workSrc"></prop>
+	 			<prop key="tomSrc"></prop>
+	 		</props>
+	 	</property>
+	</bean>
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>Messages-member</value>
+				<value>Messages-album</value>
+				<value>Messages-singer</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="loggingAdvice"
+			 class="kr.co.seoulit.common.advice.LoggingAdvice">
+	</bean>
+
+	<bean id="abstractMiPlatformController"
+			class="kr.co.seoulit.common.controller.AbstractMiPlatformController"
+			abstract="true" p:datasetBeanMapper-ref="datasetBeanMapper" />
+
+</beans>

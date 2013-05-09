@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQLMap 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Album">
+	<typeAlias alias="albumBean" type="kr.co.nyong.album.to.AlbumBean"/>
+	<typeAlias alias="conditionBean" type="kr.co.nyong.common.to.ConditionBean"/>
+	
+	<parameterMap class="albumBean" id="albumMap">
+		<parameter property="albumId" jdbcType="VARCHAR"/>
+		<parameter property="artistId" jdbcType="VARCHAR"/>
+		<parameter property="almType" jdbcType="VARCHAR"/>
+		<parameter property="albumTitle" jdbcType="VARCHAR"/>
+		<parameter property="launchingDate" jdbcType="VARCHAR"/>
+		<parameter property="producer" jdbcType="VARCHAR"/>
+		<parameter property="distributor" jdbcType="VARCHAR"/>
+	</parameterMap>
+	
+	<resultMap class="albumBean" id="resultalbumMap">
+		<result property="albumId" column="ALB_ID"/>
+		<result property="artistId" column="ARIST_ID"/>
+		<result property="albumType" column="ALB_TYPE"/>
+		<result property="albumTitle" column="ALB_TITLE"/>
+		<result property="launchingDate" column="LAUNCHING_DATE"/>
+		<result property="producer" column="PRODUCER"/>
+		<result property="distributor" column="DISTRIBUTOR"/>
+		<result property="imageList" select="Image.selectImage" column="ALB_ID"/>
+		<result property="songList" select="Song.selectSong" column="ALB_ID"/>
+		<result property="artistList" select="Artist.selectArtist" column="ALB_ID"/>
+		<result property="sponsorList" select="Sponsor.selectSponsor" column="ALB_ID"/>
+	</resultMap>
+	
+	<select id="selectAlbumList" resultMap="resultAlbumMap" parameterClass="conditionBean">
+		select ALB_ID, ARIST_ID, ALB_TYPE, ALB_TITLE, LAUNCHING_DATE, 	PRODUCER, DISTRIBUTOR
+			from ALBUM
+			//요기 동적쿼리 넣기!
+	</select>
+	
+	<insert id="insertAlbum" parameterMap="albumMap">
+		insert into ALBUM(ALB_ID, ARIST_ID, ALB_TYPE, ALB_TITLE, LAUNCHING_DATE, 
+						PRODUCER, DISTRIBUTOR)
+			values (?,?,?,?,?,?,?)
+	</insert>
+	
+	<update id="updateAlbum" parameterClass="albumBean">
+		update ALBUM set ARIST_ID=#artistId#, ALB_TYPE=#albumType#,
+									ALB_TITLE=#albumTitle#, LAUNCHING_DATE=#launchingDate#, 
+									PRODUCER=#producer#, DISTRIBUTOR=#distributor#
+						where ALB_ID=#albumId#
+	</update>
+	
+	<delete id="deleteAlbum" parameterClass="albumBean">
+		delete from ALBUM where ALB_ID=#albumId#
+	</delete>
+</sqlMap>

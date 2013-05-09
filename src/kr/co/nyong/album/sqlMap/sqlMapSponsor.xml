@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQLMap 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Sponsor">
+	<typeAlias alias="sponsorBean" type="kr.co.nyong.album.to.SponsorBean"/>
+	
+	<parameterMap class="sponsorBean" id="sponsorBean">
+		<parameter property="sponsorId" jdbcType="VARCHAR"/>
+		<parameter property="albumId" jdbcType="VARCHAR"/>
+		<parameter property="sponsorName" jdbcType="VARCHAR"/>
+		<parameter property="sponsorTel" jdbcType="VARCHAR"/>
+		<parameter property="sponsorAmount" jdbcType="VARCHAR"/>
+		<parameter property="donateDate" jdbcType="VARCHAR"/>
+	</parameterMap>
+	
+	<resultMap class="sponsorBean" id="resultSponsorMap">
+		<result property="sponsorId" column="SPONSOR_ID"/>
+		<result property="albumId" column="ALB_ID"/>
+		<result property="sponsorName" column="SPONSOR_NAME"/>
+		<result property="sponsorTel" column="SPONSOR_TEL"/>
+		<result property="sponsorAmount" column="SPONSOR_AMOUNT"/>
+		<result property="donateDate" column="DONATE_DATE"/>
+	</resultMap>
+	
+	<select id="selectSponsor" resultMap="resultSponsorMap">
+		select SPONSOR_ID, ALB_ID, SPONSOR_NAME, SPONSOR_TEL, SPONSOR_AMOUNT, DONATE_DATE 
+			from SPONSOR where ALB_ID=#albumId#
+	</select>
+	
+	<insert id="insertSponsor" parameterClass="sponsorBean">
+		insert into SPONSOR(SPONSOR_ID, ALB_ID, SPONSOR_NAME, SPONSOR_TEL, SPONSOR_AMOUNT, DONATE_DATE)
+			values (#sponsorId#,#albumId#,#sponsorName#,#sponsorTel#,#sponsorAmount#,#donateDate#,SPONSOR.nextval)
+	</insert>
+	
+	<update id="updateSponsor" parameterClass="sponsorBean">
+		update SPONSOR set ALB_ID=#albumId#, SPONSOR_NAME=#sponsorName#, SPONSOR_TEL=#sponsorTel#, 
+															SPONSOR_AMOUNT=#sponsorAmount#, DONATE_DATE=#donateDate#
+															where SPONSOR_ID=#sponsorId#
+	</update>
+	
+	<delete id="deleteSponsor" parameterClass="sponsorBean">
+		delete from SPONSOR where SPONSOR_ID=#sponsorId#
+	</delete>
+</sqlMap>

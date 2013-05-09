@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQLMap 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Image">
+	<typeAlias alias="imageBean" type="kr.co.nyong.album.to.ImageBean"/>
+	
+	<parameterMap class="imageBean" id="imageMap">
+		<parameter property="imageId" jdbcType="VARCHAR"/>
+		<parameter property="albumId" jdbcType="VARCHAR"/>
+		<parameter property="imageName" jdbcType="VARCHAR"/>
+		<parameter property="imagePath" jdbcType="VARCHAR"/>
+	</parameterMap>
+	
+	<resultMap class="imageBean" id="resultImageMap">
+		<result property="imageId" column="IMG_ID"/>
+		<result property="albumId" column="ALB_ID"/>
+		<result property="imageName" column="IMG_NAME"/>
+		<result property="imagePath" column="IMG_PATH"/>
+	</resultMap>
+	
+	<select id="selectImage" resultMap="resultImageMap">
+		select IMG_ID, ALB_ID, IMG_NAME, IMG_PATH from ALBUM_IMAGE
+			where ALB_ID=#albumId#
+	</select>
+	
+	<insert id="insertImage" parameterClass="imageBean">
+		insert into ALBUM_IMAGE (IMG_ID, ALB_ID, IMG_NAME, IMG_PATH from ALBUM_IMAGE)
+			values (#imageId#,#albumId#,#imageName#,#imagePath#)
+	</insert>
+	
+	<update id="updateImage" parameterClass="imageBean">
+		update ALBUM_IMAGE set ALB_ID=#albumId#, IMG_NAME=#imageName#, IMG_PATH=#imagePath#
+			where IMG_ID=#imageId#
+	</update>
+	
+	<delete id="deleteImage" parameterClass="imageBean">
+		delete from ALBUM_IMAGE where IMG_ID=#imageId#
+	</delete>
+</sqlMap>

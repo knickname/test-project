@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQLMap 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Artist">
+	<typeAlias alias="artistBean" type="kr.co.nyong.artist.to.ArtistBean"/>
+	<typeAlias alias="conditionBean" type="kr.co.nyong.common.to.ConditionBean"/>
+
+	<parameterMap class="artistBean" id="artistMap">
+		<parameter property="artistId" jdbcType="VARCHAR"/>
+		<parameter property="artistName" jdbcType="VARCHAR"/>
+		<parameter property="artistBirth" jdbcType="VARCHAR"/>
+		<parameter property="artistAgent" jdbcType="VARCHAR"/>
+	</parameterMap>
+	
+	<resultMap class="artistBean" id="resultArtistMap">
+		<result property="artistId" column="ARTIST_ID"/>
+		<result property="artistName" column="ARTIST_NAME"/>
+		<result property="artistBirth" column="ARTIST_BIRTH"/>
+		<result property="artistAgent" column="ARTIST_AGENT"/>
+		<result property="albumList" select="Album.selectAlbum" column="ALB_ID"/>
+	</resultMap>
+	
+	<select id="sselectArtistList" resultMap="resultArtistMap" parameterClass="conditionBean">
+		select ARTIST_ID, ARTIST_NAME, ARTIST_BIRTH, ARTIST_AGENT
+			from ARTIST
+	</select>
+	
+	<insert id="insertArtist" parameterMap="artistMap">
+		insert into ARTIST values (?,?,?,?)
+	</insert>
+	
+	<update id="updateArtist" parameterClass="artistBean">
+		update ARTIST set ARTIST_NAME=#artistName#, ARTIST_BIRTH=#artistBirth#, ARTIST_AGENT=#artistAgent#
+			where ARTIST_ID=#artistId#
+	</update>
+	
+	<delete id="deleteArtist" parameterClass="artistBean">
+		delete from ARTIST where ARTIST_ID=#artistId#
+	</delete>
+</sqlMap>

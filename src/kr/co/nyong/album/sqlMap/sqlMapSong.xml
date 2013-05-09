@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQLMap 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Song">
+	<typeAlias alias="songBean" type="kr.co.nyong.album.to.SongBean"/>
+	
+	<parameterMap class="songBean" id="songMap">
+		<parameter property="songId" jdbcType="VARCHAR"/>
+		<parameter property="albumId" jdbcType="VARCHAR"/>
+		<parameter property="songTitle" jdbcType="VARCHAR"/>
+		<parameter property="runtime" jdbcType="VARCHAR"/>
+		<parameter property="songGenre" jdbcType="VARCHAR"/>
+	</parameterMap>
+	
+	<resultMap class="songBean" id="resultSongMap">
+		<result property="songId" column="SONG_ID"/>
+		<result property="albumId" column="ALB_ID"/>
+		<result property="songTitle" column="SONG_TITLE"/>
+		<result property="runtime" column="RUNTIME"/>
+		<result property="songGenre" column="SONG_GENRE"/>
+	</resultMap>
+	
+	<select id="selectSong" resultMap="resultSongMap">
+		select SONG_ID, ALB_ID, SONG_TITLE, RUNTIME, SONG_GENRE from SONG
+			where ALB_ID=#albumId#
+	</select>
+	
+	<insert id="insertSong" parameterClass="songBean">
+		insert into SONG (SONG_ID, ALB_ID, SONG_TITLE, RUNTIME, SONG_GENRE)
+			values (#songId#,#albumId#,#songTitle#,#runtime#,#songGenre#)
+	</insert>
+	
+	<update id="updateSong" parameterClass="songBean">
+		update SONG set ALB_ID=#albumId#, SONG_TITLE=#songTitle#,
+									RUNTIME=#runtime#, SONG_GENRE=#songGenre#
+							where SONG_ID=#songId#
+	</update>
+	
+	<delete id="deleteSong" parameterClass="songBean">
+		delete from SONG where SONG_ID=#songId#
+	</delete>
+</sqlMap>
